@@ -1,6 +1,0 @@
-@NLWExpert.API_HostAddress = http://localhost:5244
-
-GET {{NLWExpert.API_HostAddress}}/weatherforecast/
-Accept: application/json
-
-###

@@ -1,20 +1,15 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using NLWExpert.API.Entities;
-using NLWExpert.API.Repositories;
+using RocketseatAuction.API.Contracts;
+using RocketseatAuction.API.Entities;
+using RocketseatAuction.API.Repositories;
 
-namespace NLWExpert.API.UseCases.Auctions.GetCurrent;
+namespace RocketseatAuction.API.UseCases.Auctions.GetCurrent;
 
-public class GetCurrentAuctionUseCase // Contém apenas uma regra de negocio
+public class GetCurrentAuctionUseCase
 {
-    public Auction? Execute ()
-    {
-        var repositorty = new NLWExpertAuctionDbContext();
+    private readonly IAuctionRepository _repository;
 
-        var today = DateTime.Now;
+    public GetCurrentAuctionUseCase(IAuctionRepository repository) => _repository = repository;
 
-        return repositorty
-            .Auctions
-            .Include(auction => auction.Items) // Precisa incluir os items
-            .FirstOrDefault(auction => today >= auction.Starts && today <= auction.Ends); // Se encontrar traz se não encontrar retorna nulo ao invés de uma exception
-    }
+    public Auction? Execute() => _repository.GetCurrent();
 }
