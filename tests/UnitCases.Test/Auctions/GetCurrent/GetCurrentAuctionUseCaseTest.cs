@@ -16,12 +16,12 @@ public class GetCurrentAuctionUseCaseTest
     {
         // Arrange
 
-        var entity = new Faker<Auction>()
-            .RuleFor(auction => auction.Id, f => f.Random.Number(1, 700))
+        var entity = new Faker<Auction>() 
+            .RuleFor(auction => auction.Id, faker => faker.Random.Number(1, 700))
             .RuleFor(auction => auction.Name, f => f.Lorem.Word())
             .RuleFor(auction => auction.Starts, f => f.Date.Past())
             .RuleFor(auction => auction.Ends, f => f.Date.Future())
-            .RuleFor(auction => auction.Items, (f, auction) => new List<Item>
+            .RuleFor(auction => auction.Items, (f, auction) => new List<Item> // Auction é a própria instância que ele está criando de Id, podendo assim recuperar
             {
                 new Item
                 {
@@ -29,14 +29,14 @@ public class GetCurrentAuctionUseCaseTest
                     Name = f.Commerce.ProductName(),
                     Brand = f.Commerce.Department(),
                     BasePrice = f.Random.Decimal(50, 1000),
-                    Condition = f.PickRandom<Condition>(),
+                    Condition = f.PickRandom<Condition>(), // Mandar o Enum 
                     AuctionId = auction.Id
                 }
-            }).Generate();
+            }).Generate(); // FMostra como serão enviados
 
             
 
-        var mock = new Mock<IAuctionRepository>();
+        var mock = new Mock<IAuctionRepository>(); // Repositório fake
         mock.Setup(i => i.GetCurrent()).Returns(entity);
 
         var useCase = new GetCurrentAuctionUseCase(mock.Object);
